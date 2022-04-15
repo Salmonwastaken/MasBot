@@ -20,7 +20,7 @@ client.once(`ready`, (async ()=>{
   setInterval(async () => {
     // Fetch channels and save them in a const
     const mascot = await client.channels.fetch(mascotchannelid).catch();
-    const dan = await client.user.fetch(danid).catch();
+    const dan = await message.guild.members.fetch(danid).catch();
     console.log(dan);
     // Make sure they were fetched properly and continue
     if ( mascot ) {
@@ -55,14 +55,13 @@ client.once(`ready`, (async ()=>{
                   .catch((err) => {
                     console.log(err);
                   });
-            } else {
-              mascot.send({
-                content: `Man what the fuck there are no images left.`,
-              });
             }
           })
           .catch((err) => {
             console.log(err);
+            mascot.send({
+              content: `Man what the fuck there are no images left.`,
+            });
           });
     } else {
       console.log('Couldn\'t find that channel man, shit sucks big time.');
