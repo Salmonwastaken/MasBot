@@ -1,13 +1,14 @@
 #!/usr/bin/node
 
 // Require the necessary discord.js classes
-const {Client, Intents} = require( `discord.js` );
+const {Client, Intents, MessageEmbed} = require( `discord.js` );
 const drbox = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {token,
   globalInterval,
   dropboxtoken,
   mascotchannelid,
   dropfolder} = require( `/etc/Projects/MasBot/vars.json` );
+const fs = require(`fs`);
 
 // Create a new Discord client instance
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
@@ -25,6 +26,20 @@ client.once(`ready`, (async ()=>{
       dbx.filesListFolder({path: dropfolder})
           .then((response) => {
             console.log(response.result.entries);
+            dbx.filesGetTemporaryLink(response.result.entries[0].path_lower)
+                .then((response) => {
+                  console.log(response);
+                  // mascotmessage = mascot.send({
+                  //   content: `I found this file! {}`,
+                  //   files: [{
+                  //     attachment: response.,
+                  //     name: file,
+                  //   }],
+                  // }).catch();
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
           })
           .catch((err) => {
             console.log(err);
