@@ -26,6 +26,7 @@ client.once(`ready`, (async ()=>{
       dbx.filesListFolder({path: dropfolder})
           .then((response) => {
             console.log(response.result.entries[0].path_lower);
+            const filename = response.result.entries[0].name;
             const filepath = response.result.entries[0].path_lower;
             dbx.filesGetTemporaryLink({path: filepath})
                 .then((response) => {
@@ -35,7 +36,7 @@ client.once(`ready`, (async ()=>{
                     content: `Look at what I found!`,
                     files: [{
                       attachment: filelink,
-                      name: file,
+                      name: filename,
                     }],
                   }).catch();
                 })
