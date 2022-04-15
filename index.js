@@ -32,13 +32,22 @@ client.once(`ready`, (async ()=>{
                 .then((response) => {
                   const filelink = response.result.link;
                   console.log(filelink);
-                  mascotmessage = mascot.send({
+                  const mascotmessage = mascot.send({
                     content: `Look at what I found!`,
                     files: [{
                       attachment: filelink,
                       name: filename,
                     }],
                   }).catch();
+                  if ( mascotmessage ) {
+                    dbx.filesDeleteV2({path: filepath})
+                        .then((response) => {
+                          console.log(response);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+                  }
                 })
                 .catch((err) => {
                   console.log(err);
