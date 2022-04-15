@@ -6,7 +6,8 @@ const drbox = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {token,
   globalInterval,
   dropboxtoken,
-  mascotchannelid} = require( `/etc/Projects/MasBot/vars.json` );
+  mascotchannelid,
+  dropfolder} = require( `/etc/Projects/MasBot/vars.json` );
 
 // Create a new Discord client instance
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
@@ -21,7 +22,7 @@ client.once(`ready`, (async ()=>{
     // Make sure they were fetched properly and continue
     if ( mascot ) {
       const dbx = new drbox.Dropbox({accessToken: dropboxtoken});
-      dbx.filesListFolder({path: 'Mascots'})
+      dbx.filesListFolder({path: dropfolder})
           .then((response) => {
             console.log(response);
           })
