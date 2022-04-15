@@ -25,7 +25,7 @@ client.once(`ready`, (async ()=>{
       const dbx = new drbox.Dropbox({accessToken: dropboxtoken});
       dbx.filesListFolder({path: dropfolder})
           .then((response) => {
-            console.log(response.result.entries);
+            console.log(response.result.entries[0].path_lower);
             dbx.filesGetTemporaryLink(response.result.entries[0].path_lower)
                 .then((response) => {
                   console.log(response);
