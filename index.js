@@ -2,13 +2,13 @@
 
 // Require the necessary discord.js classes
 const {Client, Intents} = require( `discord.js` );
-const drbox = require(`dropbox`); // eslint-disable-line no-unused-vars
-const {token,
+const Dropbox = require(`dropbox`); // eslint-disable-line no-unused-vars
+const {Token,
   globalInterval,
-  dropboxtoken,
-  mascotchannelid,
-  dropfolder,
-  danid} = require( `/etc/Projects/MasBot/vars.json` );
+  dropboxToken,
+  mascotchannelId,
+  dropboxFolder,
+  danId} = require( `/etc/Projects/MasBot/vars.json` );
 
 // Create a new Discord client instance
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
@@ -19,33 +19,31 @@ client.once(`ready`, (async ()=>{
   console.log(`Ready`);
   setInterval(async () => {
     // Fetch channels and save them in a const
-    const mascot = await client.channels.fetch(mascotchannelid).catch();
-    const dan = await client.users.fetch(danid).catch();
-    console.log(dan);
+    const Mascot = await client.channels.fetch(mascotchannelId).catch();
+    const Dan = await client.users.fetch(danId).catch();
     // Make sure they were fetched properly and continue
-    if ( mascot ) {
-      const dbx = new drbox.Dropbox({accessToken: dropboxtoken});
-      dbx.filesListFolder({path: dropfolder})
-          .then((response) => {
-            console.log(response.result.entries[0].path_lower);
-            const filename = response.result.entries[0].name;
-            const filepath = response.result.entries[0].path_lower;
-            if ( filename && filepath ) {
-              dbx.filesGetTemporaryLink({path: filepath})
-                  .then((response) => {
-                    const filelink = response.result.link;
-                    console.log(filelink);
-                    const mascotmessage = mascot.send({
+    if ( Mascot ) {
+      const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
+      dbx.filesListFolder({path: dropboxFolder})
+          .then((fileList) => {
+            const fileName = fileList.result.entries[0].name;
+            const filePath = fileList.result.entries[0].path_lower;
+            if ( fileName && filePath ) {
+              dbx.filesGetTemporaryLink({path: filePath})
+                  .then((fileLink) => {
+                    const Link = fileLink.result.link;
+                    const mascotMessage = Mascot.send({
                       content: `Look at what I found!`,
                       files: [{
-                        attachment: filelink,
-                        name: filename,
+                        attachment: Link,
+                        name: fileName,
                       }],
                     }).catch();
-                    if ( mascotmessage ) {
-                      dbx.filesDeleteV2({path: filepath})
+                    if ( mascotMessage ) {
+                      dbx.filesDeleteV2({path: filePath})
                           .then((response) => {
-                            console.log(response);
+                            console.log('Succesfully deleted file: ' +
+                            response.result.metadata.path_display);
                           })
                           .catch((err) => {
                             console.log(err);
@@ -60,7 +58,7 @@ client.once(`ready`, (async ()=>{
           .catch((err) => {
             console.log(err);
             mascot.send({
-              content: `@${dan} Man what the fuck there are no images left.`,
+              content: `${Dan} Man what the fuck there are no images left.`,
             });
           });
     } else {
@@ -88,4 +86,4 @@ client.on(`error`, async (error) => {
 });
 client.on(`unhandledReject`, console.log);
 
-client.login(token);
+client.login(Token);
