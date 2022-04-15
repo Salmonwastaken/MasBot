@@ -24,7 +24,7 @@ client.once(`ready`, (async ()=>{
       const dbx = new drbox.Dropbox({accessToken: dropboxtoken});
       dbx.filesListFolder({path: dropfolder})
           .then((response) => {
-            console.log(response);
+            console.log(response.result.entries);
           })
           .catch((err) => {
             console.log(err);
