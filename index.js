@@ -57,7 +57,7 @@ client.once(`ready`, (async ()=>{
           })
           .catch((err) => {
             console.log(err);
-            mascot.send({
+            Mascot.send({
               content: `${Dan} Man what the fuck there are no images left.`,
             });
           });
