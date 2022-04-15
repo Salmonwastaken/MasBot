@@ -1,14 +1,14 @@
 #!/usr/bin/node
 
 // Require the necessary discord.js classes
-const {Client, Intents, MessageEmbed} = require( `discord.js` );
+const {Client, Intents} = require( `discord.js` );
 const drbox = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {token,
   globalInterval,
   dropboxtoken,
   mascotchannelid,
-  dropfolder} = require( `/etc/Projects/MasBot/vars.json` );
-const fs = require(`fs`);
+  dropfolder,
+  danid} = require( `/etc/Projects/MasBot/vars.json` );
 
 // Create a new Discord client instance
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
@@ -20,6 +20,8 @@ client.once(`ready`, (async ()=>{
   setInterval(async () => {
     // Fetch channels and save them in a const
     const mascot = await client.channels.fetch(mascotchannelid).catch();
+    const dan = await client.user.fetch(danid).catch();
+    console.log(dan);
     // Make sure they were fetched properly and continue
     if ( mascot ) {
       const dbx = new drbox.Dropbox({accessToken: dropboxtoken});
@@ -28,34 +30,42 @@ client.once(`ready`, (async ()=>{
             console.log(response.result.entries[0].path_lower);
             const filename = response.result.entries[0].name;
             const filepath = response.result.entries[0].path_lower;
-            dbx.filesGetTemporaryLink({path: filepath})
-                .then((response) => {
-                  const filelink = response.result.link;
-                  console.log(filelink);
-                  const mascotmessage = mascot.send({
-                    content: `Look at what I found!`,
-                    files: [{
-                      attachment: filelink,
-                      name: filename,
-                    }],
-                  }).catch();
-                  if ( mascotmessage ) {
-                    dbx.filesDeleteV2({path: filepath})
-                        .then((response) => {
-                          console.log(response);
-                        })
-                        .catch((err) => {
-                          console.log(err);
-                        });
-                  }
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
+            if ( filename && filepath ) {
+              dbx.filesGetTemporaryLink({path: filepath})
+                  .then((response) => {
+                    const filelink = response.result.link;
+                    console.log(filelink);
+                    const mascotmessage = mascot.send({
+                      content: `Look at what I found!`,
+                      files: [{
+                        attachment: filelink,
+                        name: filename,
+                      }],
+                    }).catch();
+                    if ( mascotmessage ) {
+                      dbx.filesDeleteV2({path: filepath})
+                          .then((response) => {
+                            console.log(response);
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+            } else {
+              mascot.send({
+                content: `Man what the fuck there are no images left.`,
+              });
+            }
           })
           .catch((err) => {
             console.log(err);
           });
+    } else {
+      console.log('Couldn\'t find that channel man, shit sucks big time.');
     }
   }, globalInterval);
 }));
