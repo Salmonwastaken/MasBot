@@ -29,7 +29,7 @@ client.once(`ready`, (async ()=>{
             const filepath = response.result.entries[0].path_lower;
             dbx.filesGetTemporaryLink({path: filepath})
                 .then((response) => {
-                  const filelink = response.link;
+                  const filelink = response.result.link;
                   console.log(filelink);
                   // mascotmessage = mascot.send({
                   //   content: `I found this file! {}`,
