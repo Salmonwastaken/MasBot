@@ -33,7 +33,7 @@ client.once(`ready`, (async ()=>{
                   .then((fileLink) => {
                     const Link = fileLink.result.link;
                     const mascotMessage = Mascot.send({
-                      content: `Look at what I found!`,
+                      content: ``,
                       files: [{
                         attachment: Link,
                         name: fileName,
