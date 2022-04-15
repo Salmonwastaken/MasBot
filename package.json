@@ -21,6 +21,7 @@
     "eslint-config-google": "^0.14.0"
   },
   "dependencies": {
-    "dropbox": "^10.27.0"
+    "dropbox": "^10.27.0",
+    "node.js": "^0.0.1-security"
   }
 }
