@@ -22,15 +22,25 @@ client.once(`ready`, (async ()=>{
     const Mascot = await client.channels.fetch(mascotchannelId).catch();
     const Dan = await client.users.fetch(danId).catch();
     // Make sure they were fetched properly and continue
-    if ( Mascot ) {
+    if ( Mascot && Dan ) {
       const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
+      // Ask Dropbox to send us everything in the Dropbox folder we specify
       dbx.filesListFolder({path: dropboxFolder})
           .then((fileList) => {
+            // Look at the results and then grab the filename
+            // and the path in lowercase.
             const fileName = fileList.result.entries[0].name;
             const filePath = fileList.result.entries[0].path_lower;
+            // If we managed to set both of those correctly, we continue
             if ( fileName && filePath ) {
+              // Ask Dropbox for a temporary download link for the filePath
+              // we got earlier
               dbx.filesGetTemporaryLink({path: filePath})
                   .then((fileLink) => {
+                    /* Throw the link into a constant and
+                    then throw it in as an attachment,
+                    this will download the file at the url and then post it
+                    */
                     const Link = fileLink.result.link;
                     const mascotMessage = Mascot.send({
                       content: ``,
@@ -39,6 +49,7 @@ client.once(`ready`, (async ()=>{
                         name: fileName,
                       }],
                     }).catch();
+                    // If sending the message was succesful, we delete the file.
                     if ( mascotMessage ) {
                       dbx.filesDeleteV2({path: filePath})
                           .then((response) => {
