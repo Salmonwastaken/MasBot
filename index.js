@@ -60,7 +60,7 @@ client.once(`ready`, (async ()=>{
           .catch((err) => {
             console.log(err);
             mascot.send({
-              content: `Man what the fuck there are no images left.`,
+              content: `@${danid} Man what the fuck there are no images left.`,
             });
           });
     } else {
