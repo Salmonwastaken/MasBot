@@ -26,7 +26,8 @@ client.once(`ready`, (async ()=>{
       dbx.filesListFolder({path: dropfolder})
           .then((response) => {
             console.log(response.result.entries[0].path_lower);
-            dbx.filesGetTemporaryLink(response.result.entries[0].path_lower)
+            const filepath = response.result.entries[0].path_lower;
+            dbx.filesGetTemporaryLink({path: filepath})
                 .then((response) => {
                   console.log(response);
                   // mascotmessage = mascot.send({
