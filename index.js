@@ -20,7 +20,7 @@ client.once(`ready`, (async ()=>{
   setInterval(async () => {
     // Fetch channels and save them in a const
     const mascot = await client.channels.fetch(mascotchannelid).catch();
-    const dan = await client.users.cache.fetch(danid).catch();
+    const dan = await client.users.fetch(danid).catch();
     console.log(dan);
     // Make sure they were fetched properly and continue
     if ( mascot ) {
