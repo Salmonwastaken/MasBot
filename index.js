@@ -31,13 +31,13 @@ client.once(`ready`, (async ()=>{
                 .then((response) => {
                   const filelink = response.result.link;
                   console.log(filelink);
-                  // mascotmessage = mascot.send({
-                  //   content: `I found this file! {}`,
-                  //   files: [{
-                  //     attachment: response.,
-                  //     name: file,
-                  //   }],
-                  // }).catch();
+                  mascotmessage = mascot.send({
+                    content: `Look at what I found!`,
+                    files: [{
+                      attachment: filelink,
+                      name: file,
+                    }],
+                  }).catch();
                 })
                 .catch((err) => {
                   console.log(err);
