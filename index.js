@@ -15,14 +15,15 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS,
   Intents.FLAGS.GUILD_MESSAGES]});
 
 const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
-const refresh = dbx.getRefreshToken();
-dbx.setRefreshToken(refresh);
+const dbxauth = new Dropbox.DropboxAuth({accessToken: dropboxToken});
+const refresh = dbxauth.getRefreshToken();
+dbxauth.setRefreshToken(refresh);
 
 // idk man all these clowns just keep revoking acces tokens
 // so we get a new one every ~3 hours
 setInterval(async () => {
-  newToken = await dbx.checkAndRefreshAccessToken();
-  await dbx.setAccessToken(newToken);
+  newToken = dbxauth.checkAndRefreshAccessToken();
+  dbxauth.setAccessToken(newToken);
 }, 10000);
 
 client.once(`ready`, (async ()=>{
