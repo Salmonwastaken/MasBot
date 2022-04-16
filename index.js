@@ -21,8 +21,8 @@ dbx.setRefreshToken(refresh);
 // idk man all these clowns just keep revoking acces tokens
 // so we get a new one every ~3 hours
 setInterval(async () => {
-  newToken = dbx.checkAndRefreshAccessToken();
-  dbx.setAccessToken(newToken);
+  newToken = await dbx.checkAndRefreshAccessToken();
+  await dbx.setAccessToken(newToken);
 }, 10000);
 
 client.once(`ready`, (async ()=>{
