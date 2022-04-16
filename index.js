@@ -53,7 +53,6 @@ client.once(`ready`, (async ()=>{
                     */
                     const Link = fileLink.result.link;
                     const mascotMessage = Mascot.send({
-                      content: ``,
                       files: [{
                         attachment: Link,
                         name: fileName,
