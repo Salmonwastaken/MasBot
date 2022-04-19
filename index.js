@@ -2,7 +2,7 @@
 
 // Require the necessary discord.js classes
 const {Client, Intents} = require( `discord.js` );
-const Dropbox = require(`dropbox`); // eslint-disable-line no-unused-vars
+const {Dropbox} = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {Token,
   globalInterval,
   dropboxToken,
@@ -17,18 +17,17 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS,
 
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
-  const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
-  const dbxauth = new Dropbox.DropboxAuth({accessToken: dropboxToken});
-  const refresh = dbxauth.getRefreshToken();
+  const dbx = new Dropbox({accessToken: dropboxToken});
+  const refresh = dbx.auth.getRefreshToken();
   console.log(refresh);
-  dbxauth.setRefreshToken(refresh);
+  dbx.auth.setRefreshToken(refresh);
 
   // idk man all these clowns just keep revoking acces tokens
   // so we get a new one every ~3 hours
   setInterval(async () => {
-    newToken = dbxauth.checkAndRefreshAccessToken();
+    newToken = dbx.auth.checkAndRefreshAccessToken();
     console.log(newToken);
-    dbxauth.setAccessToken(newToken);
+    dbx.auth.setAccessToken(newToken);
   }, 10000);
 
   console.log(`Ready`);
