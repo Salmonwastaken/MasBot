@@ -14,6 +14,20 @@ const {Token,
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
   Intents.FLAGS.GUILD_MESSAGES]});
 
+const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
+const dbxauth = new Dropbox.DropboxAuth({accessToken: dropboxToken});
+const refresh = dbxauth.getRefreshToken();
+console.log(refresh);
+dbxauth.setRefreshToken(refresh);
+
+// idk man all these clowns just keep revoking acces tokens
+// so we get a new one every ~3 hours
+setInterval(async () => {
+  newToken = dbxauth.checkAndRefreshAccessToken();
+  console.log(newToken);
+  dbxauth.setAccessToken(newToken);
+}, 10000);
+
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
   console.log(`Ready`);
@@ -23,7 +37,6 @@ client.once(`ready`, (async ()=>{
     const Dan = await client.users.fetch(danId).catch();
     // Make sure they were fetched properly and continue
     if ( Mascot ) {
-      const dbx = new Dropbox.Dropbox({accessToken: dropboxToken});
       dbx.filesListFolder({path: dropboxFolder})
           .then((fileList) => {
             const fileName = fileList.result.entries[0].name;
@@ -57,7 +70,7 @@ client.once(`ready`, (async ()=>{
           })
           .catch((err) => {
             console.log(err);
-            mascot.send({
+            Mascot.send({
               content: `${Dan} Man what the fuck there are no images left.`,
             });
           });
