@@ -20,7 +20,7 @@ client.once(`ready`, (async ()=>{
   const dbx = new Dropbox({accessToken: dropboxToken});
   console.log(dbx.auth.getRefreshToken());
   console.log(dbx.auth.getAccessToken());
-  dbx.auth.setRefreshToken(refresh);
+  // dbx.auth.setRefreshToken(refresh);
 
   // idk man all these clowns just keep revoking acces tokens
   // so we get a new one every ~3 hours
