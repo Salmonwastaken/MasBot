@@ -18,7 +18,7 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS,
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
   const dbx = new Dropbox({accessToken: dropboxToken});
-  console.log(dbx.auth.getRefreshToken());
+  console.log(await dbx.auth.checkAndRefreshAccessToken());
   console.log(dbx.auth.getAccessToken());
   // dbx.auth.setRefreshToken(refresh);
 
