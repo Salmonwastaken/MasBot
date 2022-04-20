@@ -5,7 +5,9 @@ const {Client, Intents} = require( `discord.js` );
 const {Dropbox} = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {Token,
   globalInterval,
-  dropboxToken,
+  dropboxCode,
+  dropboxClientId,
+  dropboxClientSecret,
   mascotchannelId,
   dropboxFolder,
   danId} = require( `/etc/Projects/MasBot/vars.json` );
@@ -14,11 +16,15 @@ const {Token,
 const client = new Client({intents: [Intents.FLAGS.GUILDS,
   Intents.FLAGS.GUILD_MESSAGES]});
 
+const dropboxConfig = {
+  clientId: dropboxClientId,
+  clientSecret: dropboxClientSecret,
+};
 
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
-  const dbx = new Dropbox();
-  dbx.auth.getAccessTokenFromCode('http://localhost', dropboxToken)
+  const dbx = new Dropbox(dropboxConfig);
+  dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
       .then((response) => {
         console.log(response);
       });
