@@ -34,12 +34,16 @@ client.once(`ready`, (async ()=>{
         dbx.auth.setRefreshToken(response.result.refresh_token);
       });
   setInterval(async () => {
-    console.log(dbx.auth.getAccessToken());
     dbx.auth.refreshAccessToken()
         .then((response) => {
-          console.log(response);
+          if (response) {
+            console.log(response);
+            dbx.auth.setAccessToken(response.result.access_token);
+          } else {
+            console.log('Response was empty, token might still be valid.');
+          }
         });
-  }, 10000);
+  }, 100000);
   console.log(`Ready`);
   setInterval(async () => {
     // Fetch channels and save them in a const
