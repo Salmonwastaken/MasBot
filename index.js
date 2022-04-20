@@ -26,12 +26,16 @@ client.once(`ready`, (async ()=>{
   const dbx = new Dropbox(dropboxConfig);
   dbx.auth.getAuthenticationUrl('http://localhost', null, 'code', 'offline', null, 'none', false)
       .then((response) => {
-        console.log('Use this url to grab a code' + response);
+        console.log('Use this url to grab a code:  ' + response);
       });
   dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
       .then((response) => {
-        console.log(response);
+        dbx.auth.setAccessToken(response.result.acces_token);
+        dbx.auth.setRefreshToken(response.result.refresh_token);
       });
+  setInterval(async () => {
+    console.log(await dbx.auth.checkAndRefreshAccessToken());
+  }, 10000);
   console.log(`Ready`);
   setInterval(async () => {
     // Fetch channels and save them in a const
