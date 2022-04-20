@@ -17,7 +17,10 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS,
 
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
-  const dbx = new Dropbox({accessToken: dropboxToken});
+  dbx.auth.getAccessTokenFromCode('http://localhost', dropboxToken)
+      .then((response) => {
+        console.log(response);
+      });
   console.log(`Ready`);
   setInterval(async () => {
     // Fetch channels and save them in a const
