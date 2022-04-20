@@ -30,7 +30,7 @@ client.once(`ready`, (async ()=>{
       });
   dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
       .then((response) => {
-        dbx.auth.setAccessToken(response.result.acces_token);
+        dbx.auth.setAccessToken(response.result.access_token);
         console.log(dbx.auth.getAccessToken());
         dbx.auth.setRefreshToken(response.result.refresh_token);
         console.log(dbx.auth.getRefreshToken());
