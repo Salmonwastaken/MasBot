@@ -37,7 +37,9 @@ client.once(`ready`, (async ()=>{
       });
   setInterval(async () => {
     newToken = await dbx.auth.refreshAccessToken();
-    dbx.auth.setAccessToken(newToken);
+    dbx.auth.setAccessToken(newToken).then((response) => {
+      console.log(response);
+    });
   }, 10000);
   console.log(`Ready`);
   setInterval(async () => {
