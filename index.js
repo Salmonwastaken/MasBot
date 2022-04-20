@@ -31,15 +31,13 @@ client.once(`ready`, (async ()=>{
   dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
       .then((response) => {
         dbx.auth.setAccessToken(response.result.acces_token);
-        console.log('This token will expire at: ' +
-        dbx.auth.getAccessTokenExpiresAt());
         dbx.auth.setRefreshToken(response.result.refresh_token);
       });
   setInterval(async () => {
+    console.log(dbx.auth.getAccessToken());
     newToken = await dbx.auth.refreshAccessToken();
-    dbx.auth.setAccessToken(newToken).then((response) => {
-      console.log(response);
-    });
+    dbx.auth.setAccessToken(newToken);
+    console.log(dbx.auth.getAccessToken());
   }, 10000);
   console.log(`Ready`);
   setInterval(async () => {
