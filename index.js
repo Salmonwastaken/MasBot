@@ -24,6 +24,10 @@ const dropboxConfig = {
 // For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
   const dbx = new Dropbox(dropboxConfig);
+  dbx.auth.getAuthenticationUrl('http://localhost', null, 'code', 'offline', null, 'none', false)
+      .then((response) => {
+        console.log('Use this url to grab a code' + response);
+      });
   dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
       .then((response) => {
         console.log(response);
