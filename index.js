@@ -40,12 +40,13 @@ client.once(`ready`, (async ()=>{
                   .then((fileLink) => {
                     const Link = fileLink.result.link;
                     const mascotMessage = Mascot.send({
-                      content: ``,
                       files: [{
                         attachment: Link,
                         name: fileName,
                       }],
-                    }).catch();
+                    }).catch((err) => {
+                      console.error(err);
+                    });
                     if ( mascotMessage ) {
                       dbx.filesDeleteV2({path: filePath})
                           .then((response) => {
@@ -53,17 +54,17 @@ client.once(`ready`, (async ()=>{
                             response.result.metadata.path_display);
                           })
                           .catch((err) => {
-                            console.log(err);
+                            console.error(err);
                           });
                     }
                   })
                   .catch((err) => {
-                    console.log(err);
+                    console.error(err)
                   });
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
             Mascot.send({
               content: `${Dan} Man what the fuck there are no images left.`,
             });
