@@ -5,7 +5,7 @@ const {Client, Intents} = require( `discord.js` );
 const {Dropbox} = require(`dropbox`); // eslint-disable-line no-unused-vars
 const {Token,
   globalInterval,
-  dropboxCode,
+  dropboxRefresh,
   dropboxClientId,
   dropboxClientSecret,
   mascotchannelId,
@@ -17,33 +17,13 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS,
   Intents.FLAGS.GUILD_MESSAGES]});
 
 const dropboxConfig = {
+  refreshToken: dropboxRefresh,
   clientId: dropboxClientId,
   clientSecret: dropboxClientSecret,
 };
 
-// For troubleshooting. Really doesn't need to be async but it is.
 client.once(`ready`, (async ()=>{
   const dbx = new Dropbox(dropboxConfig);
-  dbx.auth.getAuthenticationUrl('http://localhost', null, 'code', 'offline', null, 'none', false)
-      .then((response) => {
-        console.log('Use this url to grab a code:  ' + response);
-      });
-  dbx.auth.getAccessTokenFromCode('http://localhost', dropboxCode)
-      .then((response) => {
-        dbx.auth.setAccessToken(response.result.access_token);
-        dbx.auth.setRefreshToken(response.result.refresh_token);
-      });
-  setInterval(async () => {
-    dbx.auth.refreshAccessToken()
-        .then((response) => {
-          if (response) {
-            console.log(response);
-            dbx.auth.setAccessToken(response.result.access_token);
-          } else {
-            console.log('Response was empty, token might still be valid.');
-          }
-        });
-  }, 100000);
   console.log(`Ready`);
   setInterval(async () => {
     // Fetch channels and save them in a const
